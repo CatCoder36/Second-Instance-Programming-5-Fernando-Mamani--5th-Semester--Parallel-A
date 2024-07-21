@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Second instance - Fernando Mamani</title>
+</head>
+<body>
+    <div id="myapp"></div>
+    <script src="main.js"></script>
+    <script>
+        var app = Elm.Main.init({
+            node: document.getElementById('myapp')
+        });
+    </script>
+</body>
+</html>
