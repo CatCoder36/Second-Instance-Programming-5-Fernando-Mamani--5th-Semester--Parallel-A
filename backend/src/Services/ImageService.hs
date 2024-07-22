@@ -1,11 +1,15 @@
-module Services.ImageService(convertRGB8ToGray8, rgbToGray, pixelToChar, convertGrayImageToAscii) where
-
+module Services.ImageService(convertRGB8ToGray8, rgbToGray, pixelToChar, convertGrayImageToAscii,
+processImage) where
+import Servant.Multipart
 import GHC.Generics (Generic)
 import Codec.Picture
 import Codec.Picture.Types (promoteImage)
 import Data.Text (Text)
-import qualified Data.ByteString.Lazy as BL
+
 import qualified Data.ByteString.Lazy.Char8 as C8
+import qualified Data.ByteString.Lazy as L
+import qualified Data.ByteString.Lazy as BL
+import qualified Data.ByteString as B
 
 -- Convert a dynamic image to an RGB image
 -- This function takes a color (RGB) image and 
@@ -68,3 +72,60 @@ pixelToChar v
     | v < 201 = '.'
     | v < 226 = ' '
     | otherwise = ' '
+
+-- Process an image to convert it to ASCII art
+-- This function takes multipart data (such as that uploaded through a web form) and
+-- processes the contained image file. First, it tries to extract exactly one file
+-- from the multipart data. If there is not exactly one file, it returns an error,
+-- then, it tries to decode the image file. If the decoding fails, it returns an
+-- error, if the decoding succeeds, it converts the image to grayscale and then 
+-- to ASCII art.
+--
+-- Parameters:
+-- multipartData: The multipart data containing the image file
+--
+-- Returns: Either an error message or the ASCII representation of the image
+processImage :: MultipartData Mem -> Either String String
+processImage multipartData = do
+    file <- maybeToEither "Expected exactly one file" $ singleFile multipartData
+    dynamicImage <- decodeImageStrict (fdPayload file)
+    let grayImage = convertRGB8ToGray8 (convertRGB8 dynamicImage)
+    return $ convertGrayImageToAscii grayImage
+
+-- Extract a single file from multipart data
+-- This function extracts a single file from the provided multipart data.
+-- This function analyzes the multipart data and checks if it contains exactly
+-- one file, if so, it returns `Just file`, where `file` is the only file found.
+-- If the multipart data does not contain exactly one file (i.e. it contains
+-- zero or more than one file), the function returns `Nothing`, indicating that 
+-- a single file could not be extracted.
+--
+-- Parameters:
+-- multipartData: The multipart data to analyze
+--
+-- Returns: `Just file` if the multipart data contains exactly one file, `Nothing` otherwise
+singleFile :: MultipartData Mem -> Maybe (FileData Mem)
+singleFile multipartData = case files multipartData of
+    [file] -> Just file
+    _      -> Nothing
+
+-- Decode an image from a strict bytestring
+-- This function attempts to decode an image from a strict `ByteString`.The
+-- function takes a `ByteString` in lazy format (`L.ByteString`) as input and
+-- converts it to strict format, then uses the `decodeImage` function to attempt
+-- to decode this strict `ByteString` into a `DynamicImage`. If the decoding is 
+-- successful, it returns `Right DynamicImage`, where `DynamicImage` is the type
+-- of the decoded image. If it fails, it returns `Left String`, where the `String`
+-- contains the error message.
+--
+-- Parameters:
+-- bytestring: The bytestring to decode
+--
+-- Returns: Either the decoded image or an error message
+decodeImageStrict :: L.ByteString -> Either String DynamicImage
+decodeImageStrict = decodeImage . L.toStrict
+
+-- Convert a `Maybe` value to an `Either` value
+maybeToEither :: e -> Maybe a -> Either e a
+maybeToEither _ (Just x) = Right x
+maybeToEither e Nothing  = Left e

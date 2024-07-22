@@ -10,6 +10,8 @@ import Servant.Multipart
 import Data.Text (Text)
 import GHC.Generics (Generic)
 
+import Data.Maybe(listToMaybe)
+
 -- Image API type definition
 -- The Image API type definition specifies the endpoints and methods of the image API.
 -- The API consists of two endpoints: one for retrieving information about the API and one for converting an image to ASCII art.
