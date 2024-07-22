@@ -27,6 +27,7 @@ library
   exposed-modules:
       Api
       Lib
+      Server
   other-modules:
       Paths_backend
   autogen-modules:
@@ -37,9 +38,13 @@ library
   build-depends:
       aeson
     , base >=4.7 && <5
+    , filepath
     , servant
+    , servant-multipart
     , servant-server
     , text
+    , transformers
+    , wai
     , warp
   default-language: Haskell2010
 
@@ -56,9 +61,13 @@ executable backend-exe
       aeson
     , backend
     , base >=4.7 && <5
+    , filepath
     , servant
+    , servant-multipart
     , servant-server
     , text
+    , transformers
+    , wai
     , warp
   default-language: Haskell2010
 
@@ -76,8 +85,12 @@ test-suite backend-test
       aeson
     , backend
     , base >=4.7 && <5
+    , filepath
     , servant
+    , servant-multipart
     , servant-server
     , text
+    , transformers
+    , wai
     , warp
   default-language: Haskell2010
