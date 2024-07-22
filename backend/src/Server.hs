@@ -21,6 +21,6 @@ server :: Server MiAPI
 server = testGetHandler
     :<|> imageToAsciiHandler
 
--- Crear la aplicación Wai
+-- Create a WAI Application 
 app :: Application
 app = serve miApi server
