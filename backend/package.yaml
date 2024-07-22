@@ -30,6 +30,8 @@ dependencies:
 - filepath
 - transformers
 - wai
+- JuicyPixels
+- bytestring
 
 ghc-options:
 - -Wall

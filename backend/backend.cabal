@@ -25,9 +25,9 @@ source-repository head
 
 library
   exposed-modules:
-      Api
-      Lib
-      Server
+      Controller
+      Routes
+      Services.ImageService
   other-modules:
       Paths_backend
   autogen-modules:
@@ -36,8 +36,10 @@ library
       src
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
-      aeson
+      JuicyPixels
+    , aeson
     , base >=4.7 && <5
+    , bytestring
     , filepath
     , servant
     , servant-multipart
@@ -58,9 +60,11 @@ executable backend-exe
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      JuicyPixels
+    , aeson
     , backend
     , base >=4.7 && <5
+    , bytestring
     , filepath
     , servant
     , servant-multipart
@@ -82,9 +86,11 @@ test-suite backend-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      aeson
+      JuicyPixels
+    , aeson
     , backend
     , base >=4.7 && <5
+    , bytestring
     , filepath
     , servant
     , servant-multipart
