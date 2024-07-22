@@ -10,7 +10,7 @@ type alias Model =
 -- Inicialización del modelo
 init : Model
 init =
-    { message = "Fernando Mauricio Mamani Navarro" }
+    { message = "Fernando Mauricio Mamani Navarro 1-" }
 
 -- Mensajes
 type Msg

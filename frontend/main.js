@@ -4370,7 +4370,7 @@ function _Browser_load(url)
 		}
 	}));
 }
-var $author$project$Main$init = {message: '¡Hola, mundo! como es'};
+var $author$project$Main$init = {message: 'Fernando Mauricio Mamani Navarro 1-'};
 var $elm$core$Basics$EQ = {$: 'EQ'};
 var $elm$core$Basics$GT = {$: 'GT'};
 var $elm$core$Basics$LT = {$: 'LT'};
