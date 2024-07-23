@@ -32,6 +32,7 @@ dependencies:
 - wai
 - JuicyPixels
 - bytestring
+- wai-cors
 
 ghc-options:
 - -Wall

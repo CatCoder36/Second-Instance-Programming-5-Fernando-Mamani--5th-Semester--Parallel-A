@@ -16,6 +16,7 @@ import Codec.Picture.Types (promoteImage)
 import qualified Data.ByteString.Lazy.Char8 as C8
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString as B
+import Network.Wai.Middleware.Cors
 
 -- Get information about the API
 -- Defines a handler to get basic information about the API.
@@ -52,4 +53,10 @@ server = infoGetHandler
 -- Define the application
 -- The application definition serves the image API using the specified server.
 app :: Application
-app = serve imageApi server
+app = cors (const $ Just corsPolicy) $ serve imageApi server
+  where
+    corsPolicy = simpleCorsResourcePolicy
+                   { corsOrigins = Nothing  -- Permite cualquier origen
+                   , corsMethods = ["GET", "POST", "PUT", "DELETE"]  -- Métodos permitidos
+                   , corsRequestHeaders = ["Authorization", "Content-Type"]  -- Cabeceras permitidas
+                   }

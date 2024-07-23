@@ -1,2 +1,10 @@
-# Second-Instance-Programming-5-Fernando-Mamani--5th-Semester--Parallel-A
-Second Instance - Programming 5 - Fernando Mamani - 5th Semester - Parallel A
+# IMAGE TO ASCII ART CONVERTER 
+
+Second-Instance-Programming-5
+Student: Fernando-Mamani
+Semester: 5th-Semester
+Parallel: Parallel-A
+
+
+### Project status: In progress
+
