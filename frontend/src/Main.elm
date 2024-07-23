@@ -1,35 +1,51 @@
 module Main exposing (main)
 
 import Browser
-import Html exposing (Html, div, h1, text)
+import Html exposing (Html, div, button, input, text, img)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onClick, onInput)
 
--- Modelo
+-- MODEL
+
 type alias Model =
-    { message : String }
+    { selectedImage : Maybe String }
 
--- Inicialización del modelo
 init : Model
 init =
-    { message = "Fernando Mauricio Mamani Navarro 1-" }
+    { selectedImage = Nothing }
 
--- Mensajes
+
+-- UPDATE
+
 type Msg
-    = NoOp
+    = OpenFileDialog
+    | FileSelected String
 
--- Actualización del modelo
 update : Msg -> Model -> Model
 update msg model =
     case msg of
-        NoOp ->
+        OpenFileDialog ->
             model
 
--- Vista
+        FileSelected file ->
+            { model | selectedImage = Just file }
+
+
+-- VIEW
+
 view : Model -> Html Msg
 view model =
     div []
-        [ h1 [] [ text model.message ]
+        [ input [ type_ "file", accept "image/*", onInput FileSelected ] []
+        , case model.selectedImage of
+            Nothing ->
+                text "No image selected"
+
+            Just image ->
+                div []
+                    [ text "Selected image: "
+                    , img [ src image, style "max-width" "600px", style "max-height" "600px" ] []
+                    ]
         ]
 
--- Programa principal
-main =
-    Browser.sandbox { init = init, update = update, view = view }
+main = Browser.sandbox { init = init, update = update, view = view }
