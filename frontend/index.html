@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>Second instance - Fernando Mamani</title>
 </head>
+
 <body>
     <div id="myapp"></div>
     <script src="main.js"></script>
@@ -11,6 +13,39 @@
         var app = Elm.Main.init({
             node: document.getElementById('myapp')
         });
+
+        app.ports.requestFileRead.subscribe(function (fileId) {
+            var fileInput = document.getElementById(fileId);
+            var file = fileInput.files[0];
+            if (file) {
+                console.log(file);
+                var reader = new FileReader();
+                reader.onload = function (event) {
+                    app.ports.receiveFileDataUrl.send(event.target.result);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        app.ports.sendFile.subscribe(function (fileId) {
+            var input = document.getElementById(fileId);
+            if (input.files.length > 0) {
+                var file = input.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+
+                fetch("http://localhost:8080/image-to-ascci", {
+                    method: "POST",
+                    body: formData,
+                })
+                    .then(response => response.text())
+                    .then(data => {
+                        app.ports.receiveAscii.send(data);
+                    })
+                    .catch(error => console.error("Error:", error));
+            }
+        });
     </script>
 </body>
+
 </html>
