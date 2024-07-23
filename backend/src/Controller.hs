@@ -56,7 +56,7 @@ app :: Application
 app = cors (const $ Just corsPolicy) $ serve imageApi server
   where
     corsPolicy = simpleCorsResourcePolicy
-                   { corsOrigins = Nothing  -- Permite cualquier origen
-                   , corsMethods = ["GET", "POST", "PUT", "DELETE"]  -- Métodos permitidos
-                   , corsRequestHeaders = ["Authorization", "Content-Type"]  -- Cabeceras permitidas
+                   { corsOrigins = Nothing  
+                   , corsMethods = ["GET", "POST",]  
+                   , corsRequestHeaders = ["Authorization", "Content-Type"]  
                    }
