@@ -4,12 +4,12 @@ import Servant.Multipart
 import GHC.Generics (Generic)
 import Codec.Picture
 import Codec.Picture.Types (promoteImage)
-import Data.Text (Text)
-
+import qualified Data.Text as T
 import qualified Data.ByteString.Lazy.Char8 as C8
 import qualified Data.ByteString.Lazy as L
 import qualified Data.ByteString.Lazy as BL
 import qualified Data.ByteString as B
+
 
 -- Convert a dynamic image to an RGB image
 -- This function takes a color (RGB) image and 
@@ -88,8 +88,11 @@ pixelToChar v
 processImage :: MultipartData Mem -> Either String String
 processImage multipartData = do
     file <- maybeToEither "Expected exactly one file" $ singleFile multipartData
+    scaleFactorString <- lookupInput (T.pack "scaleFactor") multipartData
+    let scaleFactor = read (T.unpack scaleFactorString) :: Int
     dynamicImage <- decodeImageStrict (fdPayload file)
-    let grayImage = convertRGB8ToGray8 (convertRGB8 dynamicImage)
+    let scaledImage = scaleImage dynamicImage scaleFactor
+    let grayImage = convertRGB8ToGray8 (convertRGB8 scaledImage)
     return $ convertGrayImageToAscii grayImage
 
 -- Extract a single file from multipart data
@@ -129,3 +132,15 @@ decodeImageStrict = decodeImage . L.toStrict
 maybeToEither :: e -> Maybe a -> Either e a
 maybeToEither _ (Just x) = Right x
 maybeToEither e Nothing  = Left e
+
+scaleImage :: DynamicImage -> Int -> DynamicImage
+scaleImage (ImageRGB8 img) scaleFactor = ImageRGB8 $ scaleImageByFactor scaleFactor img
+scaleImage (ImageRGBA8 img) scaleFactor = ImageRGBA8 $ scaleImageByFactor scaleFactor img
+scaleImage (ImageYCbCr8 img) scaleFactor = ImageYCbCr8 $ scaleImageByFactor scaleFactor img
+
+scaleImageByFactor :: Pixel a => Int -> Image a -> Image a
+scaleImageByFactor factor img = generateImage generatePixel newX newY
+  where
+    newX = imageWidth img `div` factor
+    newY = imageHeight img `div` factor
+    generatePixel x y = pixelAt img (x * factor) (y * factor)

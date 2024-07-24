@@ -4,6 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Second instance - Fernando Mamani</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/styles.css">
 </head>
 
 <body>
@@ -14,11 +16,11 @@
             node: document.getElementById('myapp')
         });
 
+        var file = null;
         app.ports.requestFileRead.subscribe(function (fileId) {
             var fileInput = document.getElementById(fileId);
-            var file = fileInput.files[0];
+            file = fileInput.files[0];
             if (file) {
-                console.log(file);
                 var reader = new FileReader();
                 reader.onload = function (event) {
                     app.ports.receiveFileDataUrl.send(event.target.result);
@@ -27,24 +29,40 @@
             }
         });
 
+        var scaleFactor = 32; 
+        app.ports.sendScaleFactor.subscribe(function (newValue) {
+            scaleFactor = newValue;
+            console.log("scaleFactor updated : ", scaleFactor);
+            if(file !== null){
+                sendRequest(file);
+            }
+        });
+
         app.ports.sendFile.subscribe(function (fileId) {
             var input = document.getElementById(fileId);
             if (input.files.length > 0) {
                 var file = input.files[0];
                 var formData = new FormData();
-                formData.append("file", file);
-
-                fetch("http://localhost:8080/image-to-ascci", {
-                    method: "POST",
-                    body: formData,
-                })
-                    .then(response => response.text())
-                    .then(data => {
-                        app.ports.receiveAscii.send(data);
-                    })
-                    .catch(error => console.error("Error:", error));
+                sendRequest(file);
             }
         });
+
+        const sendRequest = (file) => {
+            var formData = new FormData();
+            formData.append("file", file);
+            formData.append("scaleFactor", scaleFactor);
+            console.log("scaleFactor : ", scaleFactor);
+
+            fetch("http://localhost:8080/image-to-ascci", {
+                method: "POST",
+                body: formData,
+            })
+                .then(response => response.text())
+                .then(data => {
+                    app.ports.receiveAscii.send(data);
+                })
+                .catch(error => console.error("Error:", error));
+        }
     </script>
 </body>
 

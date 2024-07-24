@@ -5159,13 +5159,13 @@ var $elm$core$Task$perform = F2(
 				A2($elm$core$Task$map, toMessage, task)));
 	});
 var $elm$browser$Browser$element = _Browser_element;
-var $author$project$Main$init = {asciiArt: $elm$core$Maybe$Nothing, selectedImage: $elm$core$Maybe$Nothing};
+var $author$project$Main$init = {asciiArt: $elm$core$Maybe$Nothing, scaleFactor: 32, selectedImage: $elm$core$Maybe$Nothing};
 var $elm$core$Platform$Cmd$batch = _Platform_batch;
 var $elm$core$Platform$Cmd$none = $elm$core$Platform$Cmd$batch(_List_Nil);
-var $author$project$Main$ReceiveFileDataUrl = function (a) {
+var $author$project$Types$ReceiveFileDataUrl = function (a) {
 	return {$: 'ReceiveFileDataUrl', a: a};
 };
-var $author$project$Main$SetAsciiArt = function (a) {
+var $author$project$Types$SetAsciiArt = function (a) {
 	return {$: 'SetAsciiArt', a: a};
 };
 var $elm$core$Platform$Sub$batch = _Platform_batch;
@@ -5176,13 +5176,24 @@ var $author$project$Main$subscriptions = function (model) {
 	return $elm$core$Platform$Sub$batch(
 		_List_fromArray(
 			[
-				$author$project$Main$receiveFileDataUrl($author$project$Main$ReceiveFileDataUrl),
-				$author$project$Main$receiveAscii($author$project$Main$SetAsciiArt)
+				$author$project$Main$receiveFileDataUrl($author$project$Types$ReceiveFileDataUrl),
+				$author$project$Main$receiveAscii($author$project$Types$SetAsciiArt)
 			]));
 };
 var $elm$json$Json$Encode$string = _Json_wrap;
 var $author$project$Main$requestFileRead = _Platform_outgoingPort('requestFileRead', $elm$json$Json$Encode$string);
 var $author$project$Main$sendFile = _Platform_outgoingPort('sendFile', $elm$json$Json$Encode$string);
+var $elm$json$Json$Encode$int = _Json_wrap;
+var $author$project$Main$sendScaleFactor = _Platform_outgoingPort('sendScaleFactor', $elm$json$Json$Encode$int);
+var $elm$core$Maybe$withDefault = F2(
+	function (_default, maybe) {
+		if (maybe.$ === 'Just') {
+			var value = maybe.a;
+			return value;
+		} else {
+			return _default;
+		}
+	});
 var $author$project$Main$update = F2(
 	function (msg, model) {
 		switch (msg.$) {
@@ -5206,7 +5217,7 @@ var $author$project$Main$update = F2(
 							selectedImage: $elm$core$Maybe$Just(dataUrl)
 						}),
 					$elm$core$Platform$Cmd$none);
-			default:
+			case 'SetAsciiArt':
 				var asciiArt = msg.a;
 				return _Utils_Tuple2(
 					_Utils_update(
@@ -5215,19 +5226,28 @@ var $author$project$Main$update = F2(
 							asciiArt: $elm$core$Maybe$Just(asciiArt)
 						}),
 					$elm$core$Platform$Cmd$none);
+			default:
+				var newValue = msg.a;
+				var updatedScaleFactor = A2(
+					$elm$core$Maybe$withDefault,
+					model.scaleFactor,
+					$elm$core$String$toInt(newValue));
+				var sendScaleFactorCmd = $author$project$Main$sendScaleFactor(updatedScaleFactor);
+				return _Utils_Tuple2(
+					_Utils_update(
+						model,
+						{scaleFactor: updatedScaleFactor}),
+					sendScaleFactorCmd);
 		}
 	});
-var $author$project$Main$FileSelected = function (a) {
-	return {$: 'FileSelected', a: a};
-};
-var $elm$html$Html$Attributes$stringProperty = F2(
-	function (key, string) {
-		return A2(
-			_VirtualDom_property,
-			key,
-			$elm$json$Json$Encode$string(string));
-	});
-var $elm$html$Html$Attributes$accept = $elm$html$Html$Attributes$stringProperty('accept');
+var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
+var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
+var $author$project$Styles$asciiArtStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'white-space', 'pre-wrap'),
+		A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
+		A2($elm$html$Html$Attributes$style, 'font-size', '10px')
+	]);
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$div = _VirtualDom_node('div');
 var $elm$core$List$intersperse = F2(
@@ -5249,11 +5269,9 @@ var $elm$core$List$intersperse = F2(
 		}
 	});
 var $elm$html$Html$pre = _VirtualDom_node('pre');
-var $elm$virtual_dom$VirtualDom$style = _VirtualDom_style;
-var $elm$html$Html$Attributes$style = $elm$virtual_dom$VirtualDom$style;
 var $elm$virtual_dom$VirtualDom$text = _VirtualDom_text;
 var $elm$html$Html$text = $elm$virtual_dom$VirtualDom$text;
-var $author$project$Main$asciiArtToHtml = function (asciiArtString) {
+var $author$project$Components$asciiArtToHtml = function (asciiArtString) {
 	var parts = A2($elm$core$String$split, '<br>', asciiArtString);
 	var textElements = A2($elm$core$List$map, $elm$html$Html$text, parts);
 	var withBreaks = A2(
@@ -5265,18 +5283,29 @@ var $author$project$Main$asciiArtToHtml = function (asciiArtString) {
 		_List_Nil,
 		_List_fromArray(
 			[
-				$elm$html$Html$text('ASCII Art: '),
-				A2(
-				$elm$html$Html$pre,
-				_List_fromArray(
-					[
-						A2($elm$html$Html$Attributes$style, 'white-space', 'pre-wrap'),
-						A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-						A2($elm$html$Html$Attributes$style, 'font-size', '1px')
-					]),
-				withBreaks)
+				A2($elm$html$Html$pre, $author$project$Styles$asciiArtStyle, withBreaks)
 			]));
 };
+var $author$project$Components$asciiArtPreviewComponent = function (model) {
+	var _v0 = model.asciiArt;
+	if (_v0.$ === 'Nothing') {
+		return $elm$html$Html$text('');
+	} else {
+		var asciiArtString = _v0.a;
+		return $author$project$Components$asciiArtToHtml(asciiArtString);
+	}
+};
+var $author$project$Types$FileSelected = function (a) {
+	return {$: 'FileSelected', a: a};
+};
+var $elm$html$Html$Attributes$stringProperty = F2(
+	function (key, string) {
+		return A2(
+			_VirtualDom_property,
+			key,
+			$elm$json$Json$Encode$string(string));
+	});
+var $elm$html$Html$Attributes$accept = $elm$html$Html$Attributes$stringProperty('accept');
 var $elm$virtual_dom$VirtualDom$attribute = F2(
 	function (key, value) {
 		return A2(
@@ -5285,22 +5314,16 @@ var $elm$virtual_dom$VirtualDom$attribute = F2(
 			_VirtualDom_noJavaScriptOrHtmlUri(value));
 	});
 var $elm$html$Html$Attributes$attribute = $elm$virtual_dom$VirtualDom$attribute;
+var $author$project$Styles$containerButtonFileStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px')
+	]);
 var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('htmlFor');
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
-var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
-var $author$project$Styles$mainDiv = _List_fromArray(
-	[
-		A2($elm$html$Html$Attributes$style, 'width', '100%'),
-		A2($elm$html$Html$Attributes$style, 'min-height', '100vh'),
-		A2($elm$html$Html$Attributes$style, 'padding', '0px'),
-		A2($elm$html$Html$Attributes$style, 'margin', '0px'),
-		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
-		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
-		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
-		A2($elm$html$Html$Attributes$style, 'align-items', 'center')
-	]);
+var $author$project$Styles$lineLabelStyle = 'cursor: pointer; background-color: #8e00ec; border-radius: 5px; font-family: \'Poppins\', sans-serif; padding: 10px; box-shadow: 0px 0px 5px 0px #8e00ec; color: white;';
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -5334,77 +5357,236 @@ var $elm$html$Html$Events$onInput = function (tagger) {
 			$elm$html$Html$Events$alwaysStop,
 			A2($elm$json$Json$Decode$map, tagger, $elm$html$Html$Events$targetValue)));
 };
+var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
+var $author$project$Components$fileInputComponent = A2(
+	$elm$html$Html$div,
+	_List_Nil,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$input,
+			_List_fromArray(
+				[
+					$elm$html$Html$Attributes$type_('file'),
+					$elm$html$Html$Attributes$accept('image/*'),
+					$elm$html$Html$Attributes$id('file-input'),
+					$elm$html$Html$Events$onInput(
+					function (_v0) {
+						return $author$project$Types$FileSelected('file-input');
+					}),
+					A2($elm$html$Html$Attributes$attribute, 'style', 'display:none;')
+				]),
+			_List_Nil),
+			A2(
+			$elm$html$Html$div,
+			$author$project$Styles$containerButtonFileStyle,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$label,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$for('file-input'),
+							A2($elm$html$Html$Attributes$attribute, 'style', $author$project$Styles$lineLabelStyle)
+						]),
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Select your image')
+						]))
+				]))
+		]));
+var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $elm$html$Html$h1 = _VirtualDom_node('h1');
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $elm$html$Html$header = _VirtualDom_node('header');
+var $author$project$Styles$headerContentStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'width', '100%'),
+		A2($elm$html$Html$Attributes$style, 'padding-left', '100px'),
+		A2($elm$html$Html$Attributes$style, 'padding-right', '100px')
+	]);
+var $author$project$Styles$headerStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+		A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
+		A2($elm$html$Html$Attributes$style, 'width', '100%'),
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between')
+	]);
+var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
 		$elm$html$Html$Attributes$stringProperty,
 		'src',
 		_VirtualDom_noJavaScriptOrHtmlUri(url));
 };
-var $elm$html$Html$Attributes$type_ = $elm$html$Html$Attributes$stringProperty('type');
-var $author$project$Main$view = function (model) {
+var $author$project$Styles$titleContainerStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'gap', '10px')
+	]);
+var $author$project$Styles$titleStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif')
+	]);
+var $author$project$Components$headerComponent = function (model) {
+	return A2(
+		$elm$html$Html$header,
+		$author$project$Styles$headerStyle,
+		_List_fromArray(
+			[
+				A2(
+				$elm$html$Html$div,
+				$author$project$Styles$headerContentStyle,
+				_List_fromArray(
+					[
+						A2(
+						$elm$html$Html$div,
+						$author$project$Styles$titleContainerStyle,
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$img,
+								_List_fromArray(
+									[
+										$elm$html$Html$Attributes$src('./assets/paint.png'),
+										$elm$html$Html$Attributes$class('icon-style')
+									]),
+								_List_Nil),
+								A2(
+								$elm$html$Html$h1,
+								$author$project$Styles$titleStyle,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('Image to ASCII Art')
+									]))
+							])),
+						A2(
+						$elm$html$Html$h3,
+						_List_Nil,
+						_List_fromArray(
+							[
+								$elm$html$Html$text('Fernando Mauricio Mamani Navarro')
+							]))
+					]))
+			]));
+};
+var $author$project$Styles$containerImageStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
+		A2($elm$html$Html$Attributes$style, 'border', '1px solid #8e00ec'),
+		A2($elm$html$Html$Attributes$style, 'max-width', '600px'),
+		A2($elm$html$Html$Attributes$style, 'max-height', '600px')
+	]);
+var $author$project$Styles$selectedImageTextStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'padding-right', '10px'),
+		A2($elm$html$Html$Attributes$style, 'padding-left', '10px'),
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif')
+	]);
+var $author$project$Components$imageSelectionComponent = function (model) {
+	var _v0 = model.selectedImage;
+	if (_v0.$ === 'Nothing') {
+		return A2(
+			$elm$html$Html$div,
+			$author$project$Styles$containerImageStyle,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					$author$project$Styles$selectedImageTextStyle,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('Selected image')
+						]))
+				]));
+	} else {
+		var image = _v0.a;
+		return A2(
+			$elm$html$Html$div,
+			_List_Nil,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$img,
+					_List_fromArray(
+						[
+							$elm$html$Html$Attributes$src(image),
+							$elm$html$Html$Attributes$class('image-style')
+						]),
+					_List_Nil)
+				]));
+	}
+};
+var $author$project$Styles$mainDiv = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '100%'),
+		A2($elm$html$Html$Attributes$style, 'min-height', '100vh'),
+		A2($elm$html$Html$Attributes$style, 'padding', '0px'),
+		A2($elm$html$Html$Attributes$style, 'margin', '0px'),
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'flex-start'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'gap', '10px')
+	]);
+var $author$project$Types$ValueChanged = function (a) {
+	return {$: 'ValueChanged', a: a};
+};
+var $elm$html$Html$Attributes$max = $elm$html$Html$Attributes$stringProperty('max');
+var $elm$html$Html$Attributes$min = $elm$html$Html$Attributes$stringProperty('min');
+var $author$project$Styles$rangeInputStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
+		A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center')
+	]);
+var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
+var $author$project$Components$rangeInputComponent = function (model) {
 	return A2(
 		$elm$html$Html$div,
-		$author$project$Styles$mainDiv,
+		$author$project$Styles$rangeInputStyle,
 		_List_fromArray(
 			[
 				A2(
 				$elm$html$Html$input,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$type_('file'),
-						$elm$html$Html$Attributes$accept('image/*'),
-						$elm$html$Html$Attributes$id('file-input'),
-						$elm$html$Html$Events$onInput(
-						function (_v0) {
-							return $author$project$Main$FileSelected('file-input');
-						}),
-						A2($elm$html$Html$Attributes$attribute, 'style', 'display:none;')
+						$elm$html$Html$Attributes$type_('range'),
+						$elm$html$Html$Attributes$min('5'),
+						$elm$html$Html$Attributes$max('32'),
+						$elm$html$Html$Attributes$value(
+						$elm$core$String$fromInt(model.scaleFactor)),
+						$elm$html$Html$Events$onInput($author$project$Types$ValueChanged)
 					]),
 				_List_Nil),
 				A2(
-				$elm$html$Html$label,
+				$elm$html$Html$div,
+				$author$project$Styles$rangeInputStyle,
 				_List_fromArray(
 					[
-						$elm$html$Html$Attributes$for('file-input'),
-						A2($elm$html$Html$Attributes$attribute, 'style', 'cursor: pointer; background-color: #f0f0f0; padding: 10px; border-radius: 5px;')
-					]),
-				_List_fromArray(
-					[
-						$elm$html$Html$text('Selecct your image')
-					])),
-				function () {
-				var _v1 = model.selectedImage;
-				if (_v1.$ === 'Nothing') {
-					return $elm$html$Html$text('No image selected');
-				} else {
-					var image = _v1.a;
-					return A2(
-						$elm$html$Html$div,
-						_List_Nil,
-						_List_fromArray(
-							[
-								$elm$html$Html$text('Selected image (view): '),
-								A2(
-								$elm$html$Html$img,
-								_List_fromArray(
-									[
-										$elm$html$Html$Attributes$src(image),
-										A2($elm$html$Html$Attributes$style, 'max-width', '600px'),
-										A2($elm$html$Html$Attributes$style, 'max-height', '600px')
-									]),
-								_List_Nil)
-							]));
-				}
-			}(),
-				function () {
-				var _v2 = model.asciiArt;
-				if (_v2.$ === 'Nothing') {
-					return $elm$html$Html$text('Ascii art preview');
-				} else {
-					var asciiArtString = _v2.a;
-					return $author$project$Main$asciiArtToHtml(asciiArtString);
-				}
-			}()
+						$elm$html$Html$text(
+						'Scale: ' + $elm$core$String$fromInt(model.scaleFactor))
+					]))
+			]));
+};
+var $author$project$Main$view = function (model) {
+	return A2(
+		$elm$html$Html$div,
+		$author$project$Styles$mainDiv,
+		_List_fromArray(
+			[
+				$author$project$Components$headerComponent(model),
+				$author$project$Components$imageSelectionComponent(model),
+				$author$project$Components$rangeInputComponent(model),
+				$author$project$Components$fileInputComponent,
+				$author$project$Components$asciiArtPreviewComponent(model)
 			]));
 };
 var $author$project$Main$main = $elm$browser$Browser$element(
