@@ -46,7 +46,7 @@ update msg model =
             let
                 updatedScaleFactor = Maybe.withDefault model.scaleFactor (String.toInt newValue)
                 sendScaleFactorCmd = sendScaleFactor updatedScaleFactor
-                
+
             in
             ({ model | scaleFactor = updatedScaleFactor }, sendScaleFactorCmd)
 
@@ -54,10 +54,15 @@ view : Model -> Html Msg
 view model =
     div Styles.mainDiv
         [ headerComponent model
-        , imageSelectionComponent model
+        , principalTitleComponent
+        , div Styles.containerImageAndAsciiStyle [
+            imageSelectionComponent model
+            , fileInputComponent 
+        ]
         , rangeInputComponent model
-        , fileInputComponent
+        , textExplainDisminution
         , asciiArtPreviewComponent model
+        
         ]
 
 

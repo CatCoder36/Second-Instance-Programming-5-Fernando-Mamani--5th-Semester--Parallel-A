@@ -5246,7 +5246,14 @@ var $author$project$Styles$asciiArtStyle = _List_fromArray(
 	[
 		A2($elm$html$Html$Attributes$style, 'white-space', 'pre-wrap'),
 		A2($elm$html$Html$Attributes$style, 'font-family', 'monospace'),
-		A2($elm$html$Html$Attributes$style, 'font-size', '10px')
+		A2($elm$html$Html$Attributes$style, 'font-size', '10px'),
+		A2($elm$html$Html$Attributes$style, 'max-width', '600px'),
+		A2($elm$html$Html$Attributes$style, 'max-height', '600px'),
+		A2($elm$html$Html$Attributes$style, 'overflow', 'auto'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px'),
+		A2($elm$html$Html$Attributes$style, 'color', 'black'),
+		A2($elm$html$Html$Attributes$style, 'background-color', 'white'),
+		A2($elm$html$Html$Attributes$style, 'border', '1px solid white')
 	]);
 var $elm$html$Html$br = _VirtualDom_node('br');
 var $elm$html$Html$div = _VirtualDom_node('div');
@@ -5286,15 +5293,53 @@ var $author$project$Components$asciiArtToHtml = function (asciiArtString) {
 				A2($elm$html$Html$pre, $author$project$Styles$asciiArtStyle, withBreaks)
 			]));
 };
+var $author$project$Styles$emptyContainerStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'width', '348px'),
+		A2($elm$html$Html$Attributes$style, 'height', '240px'),
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
+		A2($elm$html$Html$Attributes$style, 'border', '1px solid white'),
+		A2($elm$html$Html$Attributes$style, 'background-color', 'white')
+	]);
+var $elm$html$Html$h3 = _VirtualDom_node('h3');
+var $author$project$Styles$selectedImageTextStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'padding-right', '10px'),
+		A2($elm$html$Html$Attributes$style, 'padding-left', '10px'),
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif')
+	]);
 var $author$project$Components$asciiArtPreviewComponent = function (model) {
 	var _v0 = model.asciiArt;
 	if (_v0.$ === 'Nothing') {
-		return $elm$html$Html$text('');
+		return A2(
+			$elm$html$Html$div,
+			$author$project$Styles$emptyContainerStyle,
+			_List_fromArray(
+				[
+					A2(
+					$elm$html$Html$h3,
+					$author$project$Styles$selectedImageTextStyle,
+					_List_fromArray(
+						[
+							$elm$html$Html$text('ASCII Art')
+						]))
+				]));
 	} else {
 		var asciiArtString = _v0.a;
 		return $author$project$Components$asciiArtToHtml(asciiArtString);
 	}
 };
+var $author$project$Styles$containerImageAndAsciiStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'gap', '50px')
+	]);
 var $author$project$Types$FileSelected = function (a) {
 	return {$: 'FileSelected', a: a};
 };
@@ -5323,7 +5368,7 @@ var $elm$html$Html$Attributes$for = $elm$html$Html$Attributes$stringProperty('ht
 var $elm$html$Html$Attributes$id = $elm$html$Html$Attributes$stringProperty('id');
 var $elm$html$Html$input = _VirtualDom_node('input');
 var $elm$html$Html$label = _VirtualDom_node('label');
-var $author$project$Styles$lineLabelStyle = 'cursor: pointer; background-color: #8e00ec; border-radius: 5px; font-family: \'Poppins\', sans-serif; padding: 10px; box-shadow: 0px 0px 5px 0px #8e00ec; color: white;';
+var $author$project$Styles$lineLabelStyle = 'cursor: pointer; background-color: white; border-radius: 5px; font-family: \'Poppins\', sans-serif; padding: 10px; box-shadow: 0px 0px 5px 0px white; color: black;';
 var $elm$html$Html$Events$alwaysStop = function (x) {
 	return _Utils_Tuple2(x, true);
 };
@@ -5395,9 +5440,15 @@ var $author$project$Components$fileInputComponent = A2(
 						]))
 				]))
 		]));
+var $elm$html$Html$a = _VirtualDom_node('a');
 var $elm$html$Html$Attributes$class = $elm$html$Html$Attributes$stringProperty('className');
+var $author$project$Styles$gitHubTitleStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'color', 'white'),
+		A2($elm$html$Html$Attributes$style, 'width', 'auto')
+	]);
 var $elm$html$Html$h1 = _VirtualDom_node('h1');
-var $elm$html$Html$h3 = _VirtualDom_node('h3');
 var $elm$html$Html$header = _VirtualDom_node('header');
 var $author$project$Styles$headerContentStyle = _List_fromArray(
 	[
@@ -5416,6 +5467,12 @@ var $author$project$Styles$headerStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 		A2($elm$html$Html$Attributes$style, 'justify-content', 'space-between')
 	]);
+var $elm$html$Html$Attributes$href = function (url) {
+	return A2(
+		$elm$html$Html$Attributes$stringProperty,
+		'href',
+		_VirtualDom_noJavaScriptUri(url));
+};
 var $elm$html$Html$img = _VirtualDom_node('img');
 var $elm$html$Html$Attributes$src = function (url) {
 	return A2(
@@ -5428,11 +5485,13 @@ var $author$project$Styles$titleContainerStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
 		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
 		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-		A2($elm$html$Html$Attributes$style, 'gap', '10px')
+		A2($elm$html$Html$Attributes$style, 'gap', '10px'),
+		A2($elm$html$Html$Attributes$style, 'border-radius', '5px')
 	]);
 var $author$project$Styles$titleStyle = _List_fromArray(
 	[
-		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif')
+		A2($elm$html$Html$Attributes$style, 'font-family', 'Pacifico, \'Ubuntu Medium\', \'Ubuntu\', sans-serif, \'Times New Roman\''),
+		A2($elm$html$Html$Attributes$style, 'color', 'white')
 	]);
 var $author$project$Components$headerComponent = function (model) {
 	return A2(
@@ -5467,34 +5526,30 @@ var $author$project$Components$headerComponent = function (model) {
 									]))
 							])),
 						A2(
-						$elm$html$Html$h3,
-						_List_Nil,
+						$elm$html$Html$a,
 						_List_fromArray(
 							[
-								$elm$html$Html$text('Fernando Mauricio Mamani Navarro')
+								$elm$html$Html$Attributes$href('https://github.com/CatCoder36/Second-Instance-Programming-5-Fernando-Mamani--5th-Semester--Parallel-A.git')
+							]),
+						_List_fromArray(
+							[
+								A2(
+								$elm$html$Html$h3,
+								$author$project$Styles$gitHubTitleStyle,
+								_List_fromArray(
+									[
+										$elm$html$Html$text('GitHub')
+									]))
 							]))
 					]))
 			]));
 };
-var $author$project$Styles$containerImageStyle = _List_fromArray(
-	[
-		A2($elm$html$Html$Attributes$style, 'border-radius', '10px'),
-		A2($elm$html$Html$Attributes$style, 'border', '1px solid #8e00ec'),
-		A2($elm$html$Html$Attributes$style, 'max-width', '600px'),
-		A2($elm$html$Html$Attributes$style, 'max-height', '600px')
-	]);
-var $author$project$Styles$selectedImageTextStyle = _List_fromArray(
-	[
-		A2($elm$html$Html$Attributes$style, 'padding-right', '10px'),
-		A2($elm$html$Html$Attributes$style, 'padding-left', '10px'),
-		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif')
-	]);
 var $author$project$Components$imageSelectionComponent = function (model) {
 	var _v0 = model.selectedImage;
 	if (_v0.$ === 'Nothing') {
 		return A2(
 			$elm$html$Html$div,
-			$author$project$Styles$containerImageStyle,
+			$author$project$Styles$emptyContainerStyle,
 			_List_fromArray(
 				[
 					A2(
@@ -5502,7 +5557,7 @@ var $author$project$Components$imageSelectionComponent = function (model) {
 					$author$project$Styles$selectedImageTextStyle,
 					_List_fromArray(
 						[
-							$elm$html$Html$text('Selected image')
+							$elm$html$Html$text('UPLOAD IMAGE')
 						]))
 				]));
 	} else {
@@ -5533,8 +5588,39 @@ var $author$project$Styles$mainDiv = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
 		A2($elm$html$Html$Attributes$style, 'justify-content', 'flex-start'),
 		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
-		A2($elm$html$Html$Attributes$style, 'gap', '10px')
+		A2($elm$html$Html$Attributes$style, 'gap', '10px'),
+		A2($elm$html$Html$Attributes$style, 'background-color', '#db4d5c')
 	]);
+var $elm$html$Html$h2 = _VirtualDom_node('h2');
+var $author$project$Styles$principalTitleContainerStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-family', 'Pacifico, \'Ubuntu Medium\', \'Ubuntu\', sans-serif, \'Times New Roman\''),
+		A2($elm$html$Html$Attributes$style, 'color', 'white'),
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center'),
+		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column')
+	]);
+var $author$project$Components$principalTitleComponent = A2(
+	$elm$html$Html$div,
+	$author$project$Styles$principalTitleContainerStyle,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h1,
+			$author$project$Styles$titleStyle,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('ASCII-Generator')
+				])),
+			A2(
+			$elm$html$Html$h2,
+			_List_Nil,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Upload an image for conversion to ascii artwork')
+				]))
+		]));
 var $author$project$Types$ValueChanged = function (a) {
 	return {$: 'ValueChanged', a: a};
 };
@@ -5545,7 +5631,8 @@ var $author$project$Styles$rangeInputStyle = _List_fromArray(
 		A2($elm$html$Html$Attributes$style, 'margin-top', '10px'),
 		A2($elm$html$Html$Attributes$style, 'margin-bottom', '10px'),
 		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif'),
-		A2($elm$html$Html$Attributes$style, 'text-align', 'center')
+		A2($elm$html$Html$Attributes$style, 'text-align', 'center'),
+		A2($elm$html$Html$Attributes$style, 'color', 'white')
 	]);
 var $elm$html$Html$Attributes$value = $elm$html$Html$Attributes$stringProperty('value');
 var $author$project$Components$rangeInputComponent = function (model) {
@@ -5572,10 +5659,52 @@ var $author$project$Components$rangeInputComponent = function (model) {
 				_List_fromArray(
 					[
 						$elm$html$Html$text(
-						'Scale: ' + $elm$core$String$fromInt(model.scaleFactor))
+						'Diminished resolution: x ' + $elm$core$String$fromInt(model.scaleFactor))
 					]))
 			]));
 };
+var $elm$html$Html$p = _VirtualDom_node('p');
+var $author$project$Styles$paragraphExplainDisminutionStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'color', 'white'),
+		A2($elm$html$Html$Attributes$style, 'width', 'auto'),
+		A2($elm$html$Html$Attributes$style, 'margin', '0px')
+	]);
+var $author$project$Styles$textExplainDisminutionStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'display', 'flex'),
+		A2($elm$html$Html$Attributes$style, 'flex-direction', 'column'),
+		A2($elm$html$Html$Attributes$style, 'justify-content', 'center'),
+		A2($elm$html$Html$Attributes$style, 'align-items', 'center')
+	]);
+var $author$project$Styles$titleExplainDisminutionStyle = _List_fromArray(
+	[
+		A2($elm$html$Html$Attributes$style, 'font-family', '\'Poppins\', sans-serif'),
+		A2($elm$html$Html$Attributes$style, 'color', 'white'),
+		A2($elm$html$Html$Attributes$style, 'width', 'auto'),
+		A2($elm$html$Html$Attributes$style, 'margin', '0px')
+	]);
+var $author$project$Components$textExplainDisminution = A2(
+	$elm$html$Html$div,
+	$author$project$Styles$textExplainDisminutionStyle,
+	_List_fromArray(
+		[
+			A2(
+			$elm$html$Html$h3,
+			$author$project$Styles$titleExplainDisminutionStyle,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('Adjust the resolution decrease')
+				])),
+			A2(
+			$elm$html$Html$p,
+			$author$project$Styles$paragraphExplainDisminutionStyle,
+			_List_fromArray(
+				[
+					$elm$html$Html$text('The resolution of the image will be reduced by a factor of x times')
+				]))
+		]));
 var $author$project$Main$view = function (model) {
 	return A2(
 		$elm$html$Html$div,
@@ -5583,9 +5712,17 @@ var $author$project$Main$view = function (model) {
 		_List_fromArray(
 			[
 				$author$project$Components$headerComponent(model),
-				$author$project$Components$imageSelectionComponent(model),
+				$author$project$Components$principalTitleComponent,
+				A2(
+				$elm$html$Html$div,
+				$author$project$Styles$containerImageAndAsciiStyle,
+				_List_fromArray(
+					[
+						$author$project$Components$imageSelectionComponent(model),
+						$author$project$Components$fileInputComponent
+					])),
 				$author$project$Components$rangeInputComponent(model),
-				$author$project$Components$fileInputComponent,
+				$author$project$Components$textExplainDisminution,
 				$author$project$Components$asciiArtPreviewComponent(model)
 			]));
 };
