@@ -81,6 +81,7 @@ test-suite backend-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      ImageServiceTest
       Paths_backend
   autogen-modules:
       Paths_backend
@@ -88,10 +89,11 @@ test-suite backend-test
       test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
-      JuicyPixels
+      HUnit
+    , JuicyPixels
     , aeson
     , backend
-    , base >=4.7 && <5
+    , base
     , bytestring
     , filepath
     , servant

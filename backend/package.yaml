@@ -68,4 +68,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
+    - base
     - backend
+    - HUnit
