@@ -133,11 +133,36 @@ maybeToEither :: e -> Maybe a -> Either e a
 maybeToEither _ (Just x) = Right x
 maybeToEither e Nothing  = Left e
 
+-- Scale an image by a given factor
+-- This function scales an image by a given factor. It takes a `DynamicImage`
+-- and an integer `scaleFactor` as input and returns a new `DynamicImage` that
+-- is the scaled version of the input image. The function first checks the type
+-- of the input image and then calls the appropriate scaling function for that
+-- image type. The scaling function calculates the new dimensions of the image
+-- based on the scale factor, generates a new image with the new dimensions, and
+-- fills in the pixels of the new image by sampling the original image at the
+-- appropriate locations.
+--
+-- Parameters:
+-- dynamicImage: The image to scale
+-- scaleFactor: The factor by which to scale the image
+--
 scaleImage :: DynamicImage -> Int -> DynamicImage
 scaleImage (ImageRGB8 img) scaleFactor = ImageRGB8 $ scaleImageByFactor scaleFactor img
 scaleImage (ImageRGBA8 img) scaleFactor = ImageRGBA8 $ scaleImageByFactor scaleFactor img
 scaleImage (ImageYCbCr8 img) scaleFactor = ImageYCbCr8 $ scaleImageByFactor scaleFactor img
 
+-- Scale an image by a given factor
+-- This function scales an image by a given factor. It takes an image and an integer
+-- `factor` as input and returns a new image that is the scaled version of the input
+-- image. The function calculates the new dimensions of the image based on the factor,
+-- generates a new image with the new dimensions, and fills in the pixels of the new
+-- image by sampling the original image at the appropriate locations.
+--
+-- Parameters:
+-- factor: The factor by which to scale the image
+-- img: The image to scale
+--
 scaleImageByFactor :: Pixel a => Int -> Image a -> Image a
 scaleImageByFactor factor img = generateImage generatePixel newX newY
   where

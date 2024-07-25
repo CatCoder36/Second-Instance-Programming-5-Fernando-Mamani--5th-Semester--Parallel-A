@@ -1,5 +1,8 @@
 module Components exposing (..)
 
+-- This module contains the components that are used in the view of the application.
+-- The components are functions that receive the model and return the corresponding HTML.
+
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Styles exposing (..)

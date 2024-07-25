@@ -1,5 +1,7 @@
 module Styles exposing (..)
 
+-- This module contains the styles that are used in the view of the application.
+
 import Html exposing (Attribute)
 import Html.Attributes exposing (style)
 import Html exposing (s)
